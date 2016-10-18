@@ -1,7 +1,9 @@
 Mtime Cache
 ===========
 
-CL
+[![Build Status](https://travis-ci.org/iboB/mtime_cache.svg?branch=master)](https://travis-ci.org/iboB/mtime_cache)
+
+CLI jem to help speed-up CI builds when caching build artifacts.
 
 ## License
 
