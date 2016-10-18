@@ -27,7 +27,7 @@ You can either install mtime_cache as a gem (with `$ gem install mtime_cache`) o
 
 The most basic usage is `$ mtime_cache <globs>`
 
-This will generate a file `.mtime_cache.json` in the current directory with cached mtimes for the files matching the globs. 
+This will generate a file `.mtime_cache.json` in the current directory with cached mtimes for the files matching the globs.
 
 You must provide globs to make a cache.
 
@@ -40,7 +40,7 @@ Additionally the tool supports built in extension patterns. You can add an exten
 Valid globs are:
 * `src/*.cpp` - all `.cpp` files in src
 * `my/src/**/*.{cpp,hpp}` - all `.cpp` and `.hpp` files in my/src and all its subdirectories
-* `some/dir/**/*.{%{cpp}}` - all files typical for C/C++ in some/dir and all its subdirectories  
+* `some/dir/**/*.{%{cpp}}` - all files typical for C/C++ in some/dir and all its subdirectories
 
 The supported extension patterns are:
 * `%{cpp}` - common C/C++ extensions: `c,cc,cpp,cxx,h,hpp,hxx,inl,ipp,inc,ixx`
@@ -59,24 +59,28 @@ The supported extension patterns are:
 
 * Choose a directory name the json cache (for example `.mtime_cache`) and add it to your `.gitignore`. Then add it to your Travis CI cache. Then your cache section in `.travis.yml` might look like this
 
-      cache:
-        directories:
-        - my/build/dir
-        - .mtime_cache  
+```yaml
+cache:
+    directories:
+    - my/build/dir
+    - .mtime_cache
+```
 
 * Run mtime cache in your script before you trigger the actual build. Then you script section might look like this:
 
-      script:
-        - ./configure
-        - ./mtime_cache src/**/*.{%{cpp}} -c .mtime_cache/cache.json
-        - make
-        - ./test
+```yaml
+script:
+  - ./configure
+  - ./mtime_cache src/**/*.{%{cpp}} -c .mtime_cache/cache.json
+  - make
+  - ./test
+```
 
 You can also take a look at `.travis.yml` in this repo to see how the demo project is being built.
 
 ## Demo
 
-There is a demo project in this repo which is build by the Travis CI integration. It has three `.cpp` files and a `.hpp` file. You can see that commits that don't change one of those, don't trigger a build of the C++ code (or that commits that only change one or two `.cpp` files trigger a recompilation of only those). 
+There is a demo project in this repo which is build by the Travis CI integration. It has three `.cpp` files and a `.hpp` file. You can see that commits that don't change one of those, don't trigger a build of the C++ code (or that commits that only change one or two `.cpp` files trigger a recompilation of only those).
 
 ## License
 
