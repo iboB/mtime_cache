@@ -167,9 +167,9 @@ log "Changed mtime of #{num_changed} of #{files.length} files"
 log "Writing #{cache_file}"
 
 if !ARGS[:dry]
-    dirname = File.dirname(cache_file)
-    unless File.directory?(dirname)
-      FileUtils.mkdir_p(dirname)
-    end
-    File.open(cache_file, 'w').write(JSON.pretty_generate(files))
+  dirname = File.dirname(cache_file)
+  unless File.directory?(dirname)
+    FileUtils.mkdir_p(dirname)
   end
+  File.open(cache_file, 'w').write(JSON.pretty_generate(files))
+end
