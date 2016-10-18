@@ -1,0 +1,22 @@
+language: cpp
+os: linux
+sudo: required
+dist: trusty
+
+git:
+  depth: 10
+
+# key part: caching the build directory and the mtime cache
+cache:
+  directories:
+  - demo/build
+  - demo/.mtime_cache
+
+script:
+  - cd demo
+  - ruby ../bin/mtime_cache -g mtime_cache_globs.txt -c .mtime_cache/cache.json
+  - cd build
+  - cmake ..
+  - cd ..
+  - cmake --build build
+  - build/mtime_cache_demo
