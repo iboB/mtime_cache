@@ -27,7 +27,7 @@ require 'digest/md5'
 require 'json'
 require 'fileutils'
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 
 VERSION_TEXT = "mtime_cache v#{VERSION}"
 
@@ -124,10 +124,12 @@ end
 globs = ARGS[:globs].map { |g| g % EXTENSION_PATTERNS }
 
 globfile = ARGS[:globfile]
-File.open(globfile, 'r').each_line do |line|
-  line.strip!
-  next if line.empty?
-  globs << line % EXTENSION_PATTERNS
+if globfile
+  File.open(globfile, 'r').each_line do |line|
+    line.strip!
+    next if line.empty?
+    globs << line % EXTENSION_PATTERNS
+  end
 end
 
 if globs.empty?
