@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'mtime_cache'
-  s.version     = '1.0.1'
-  s.date        = '2016-10-08'
+  s.version     = '1.0.2'
+  s.date        = '2016-10-27'
   s.summary     = 'Cache file mtimes. Helps caching build artifacts on a CIS'
   s.executables = ['mtime_cache']
   s.description = <<-DESC
