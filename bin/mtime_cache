@@ -147,7 +147,7 @@ globs.each do |glob|
     next if !File.file?(file)
 
     mtime = File.mtime(file)
-    mtime_str = mtime.iso8601(10)
+    mtime_str = mtime.iso8601(9) # nanoseconds precision
     hash = Digest::MD5.hexdigest(File.read(file))
 
     cached = cache[file]
