@@ -146,24 +146,29 @@ globs.each do |glob|
   Dir[glob].each do |file|
     next if !File.file?(file)
 
-    mtime = File.mtime(file).iso8601(10)
+    mtime = File.mtime(file)
+    mtime_str = mtime.iso8601(10)
     hash = Digest::MD5.hexdigest(File.read(file))
 
     cached = cache[file]
 
-    cached_mtime = Time.parse(cached['mtime'])
-    if cached && cached['hash'] == hash && cached_mtime < mtime
-      mtime = cached_mtime
+    if cached && cached['hash'] == hash
+      cached_mtime_str = cached['mtime']
+      cached_mtime = Time.parse(cached_mtime_str)
+      if cached_mtime < mtime
+        mtime = cached_mtime
+        mtime_str = cached_mtime_str
 
-      log "mtime_cache: changing mtime of #{file} to #{mtime}", 1
+        log "mtime_cache: changing mtime of #{file} to #{mtime_str}", 1
 
-      File.utime(File.atime(file), Time.at(mtime), file) if !ARGS[:dry]
-      num_changed += 1
+        File.utime(File.atime(file), mtime, file) if !ARGS[:dry]
+        num_changed += 1
+      end
     else
       log "mtime_cache: NOT changing mtime of #{file}", 1
     end
 
-    files[file] = { 'mtime' => mtime, 'hash' => hash }
+    files[file] = { 'mtime' => mtime_str, 'hash' => hash }
   end
 end
 
