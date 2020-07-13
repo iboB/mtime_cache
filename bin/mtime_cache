@@ -26,6 +26,7 @@
 require 'digest/md5'
 require 'json'
 require 'fileutils'
+require 'time'
 
 VERSION = "1.0.2"
 
@@ -141,27 +142,40 @@ end
 files = {}
 num_changed = 0
 
+def str_from_time(time)
+  time.iso8601(9) # nanoseconds precision
+  # time.to_i
+end
+
 globs.each do |glob|
   Dir[glob].each do |file|
     next if !File.file?(file)
 
-    mtime = File.mtime(file).to_i
+    mtime = File.mtime(file)
     hash = Digest::MD5.hexdigest(File.read(file))
 
     cached = cache[file]
 
-    if cached && cached['hash'] == hash && cached['mtime'] < mtime
-      mtime = cached['mtime']
+    if cached && cached['hash'] == hash
+      cached_mtime_value = cached['mtime']
+      cached_mtime = if cached_mtime_value.is_a?(Integer)
+                       Time.at(cached_mtime_value)
+                     else
+                       Time.parse(cached_mtime_value)
+                     end
+      if cached_mtime < mtime
+        mtime = cached_mtime
 
-      log "mtime_cache: changing mtime of #{file} to #{mtime}", 1
+        log "mtime_cache: changing mtime of #{file} to #{str_from_time(mtime)}", 1
 
-      File.utime(File.atime(file), Time.at(mtime), file) if !ARGS[:dry]
-      num_changed += 1
+        File.utime(File.atime(file), mtime, file) if !ARGS[:dry]
+        num_changed += 1
+      end
     else
       log "mtime_cache: NOT changing mtime of #{file}", 1
     end
 
-    files[file] = { 'mtime' => mtime, 'hash' => hash }
+    files[file] = { 'mtime' => str_from_time(mtime), 'hash' => hash }
   end
 end
 
